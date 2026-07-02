@@ -272,3 +272,28 @@ def delete_gig(gig_id: int):
             }
 
     raise HTTPException(status_code=404, detail="Gig not found")
+@app.put("/gigs/{gig_id}")
+def update_gig(gig_id: int, gig_update: GigUpdate):
+    """
+    Update a gig's budget or status.
+    """
+
+    # Find the gig
+    for index, gig in enumerate(gigs_db):
+
+        if gig["id"] == gig_id:
+
+            # Update the budget if provided
+            if gig_update.budget is not None:
+                gigs_db[index]["budget"] = gig_update.budget
+
+            # Update the status if provided
+            if gig_update.status is not None:
+                gigs_db[index]["status"] = gig_update.status
+
+            return {
+                "message": "Gig updated successfully",
+                "gig": gigs_db[index]
+            }
+
+    raise HTTPException(status_code=404, detail="Gig not found")
